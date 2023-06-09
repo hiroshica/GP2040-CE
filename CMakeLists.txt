@@ -96,7 +96,7 @@ add_subdirectory(lib)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   # Activate some compiler / linker options to aid us with diagnosing stack space issues in Debug builds
-  add_compile_options(-fstack-usage -Wstack-usage=500)
+  add_compile_options(-g -O0 -fstack-usage -Wstack-usage=500)
   add_compile_definitions(PICO_USE_STACK_GUARDS=1)
 endif()
 
@@ -139,7 +139,7 @@ ${PROTO_OUTPUT_DIR}/enums.pb.c
 ${PROTO_OUTPUT_DIR}/config.pb.c
 )
 
-set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME ${PROJECT_NAME}_${CMAKE_PROJECT_VERSION}_${GP2040_BOARDCONFIG})
+#set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME ${PROJECT_NAME}_${CMAKE_PROJECT_VERSION}_${GP2040_BOARDCONFIG})
 
 pico_set_program_name(GP2040-CE "GP2040-CE")
 pico_set_program_version(GP2040-CE "0.7.2")
