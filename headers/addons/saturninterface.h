@@ -17,7 +17,6 @@ public:
 	virtual void preprocess();
     virtual std::string name() { return SIName; }
 private:
-uint32_t testwork;
 };
 
 #endif  // SATURNINTERFACE_H_

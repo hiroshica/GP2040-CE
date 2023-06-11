@@ -80,6 +80,8 @@ protected:
 #define SATURN_READ_KEY_LEFT (1UL << 5)
 #define SATURN_READ_KEY_RIGHT (1UL << 4)
 
+#define KEY_DIGITALMAX  (3+3+2+1)
+
   enum AnalogRetcode
   {
     Error = -1,
