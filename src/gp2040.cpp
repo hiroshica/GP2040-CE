@@ -20,6 +20,7 @@
 #include "addons/slider_socd.h"
 #include "addons/wiiext.h"
 #include "addons/snes_input.h"
+#include "addons/saturninterface.h"
 
 // Pico includes
 #include "pico/bootrom.h"
@@ -99,11 +100,11 @@ void GP2040::setup() {
 	adc_init();
 
 	// Setup Add-ons
-	//addons.LoadAddon(new AnalogInput(), CORE0_INPUT);
+	addons.LoadAddon(new AnalogInput(), CORE0_INPUT);
 	addons.LoadAddon(new BootselButtonAddon(), CORE0_INPUT);
 	addons.LoadAddon(new DualDirectionalInput(), CORE0_INPUT);
-  	//addons.LoadAddon(new ExtraButtonAddon(), CORE0_INPUT);
-	//addons.LoadAddon(new I2CAnalog1219Input(), CORE0_INPUT);
+  	addons.LoadAddon(new ExtraButtonAddon(), CORE0_INPUT);
+	addons.LoadAddon(new I2CAnalog1219Input(), CORE0_INPUT);
 	addons.LoadAddon(new JSliderInput(), CORE0_INPUT);
 	addons.LoadAddon(new ReverseInput(), CORE0_INPUT);
 	addons.LoadAddon(new TurboInput(), CORE0_INPUT);
@@ -111,6 +112,7 @@ void GP2040::setup() {
 	addons.LoadAddon(new SNESpadInput(), CORE0_INPUT);
 	addons.LoadAddon(new PlayerNumAddon(), CORE0_USBREPORT);
 	addons.LoadAddon(new SliderSOCDInput(), CORE0_INPUT);
+	addons.LoadAddon(new SaturnInterfaceInput(), CORE0_INPUT);
 }
 
 void GP2040::run() {

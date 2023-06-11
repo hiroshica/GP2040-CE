@@ -133,6 +133,7 @@ src/addons/turbo.cpp
 src/addons/slider_socd.cpp
 src/addons/wiiext.cpp
 src/addons/snes_input.cpp
+src/addons/saturninterface.cpp
 src/gamepad/GamepadDebouncer.cpp
 src/gamepad/GamepadDescriptors.cpp
 ${PROTO_OUTPUT_DIR}/enums.pb.c
