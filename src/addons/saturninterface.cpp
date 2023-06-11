@@ -19,6 +19,7 @@ void SaturnInterfaceInput::process()
 {
     Gamepad *gamepad = Storage::getInstance().GetGamepad();
     // gamepad->stateの中を置き換えれば本体につたわるみたい
+#if 0
     switch ((testwork / 200) % 4)
     {
     case 0:
@@ -34,6 +35,7 @@ void SaturnInterfaceInput::process()
         gamepad->state.buttons |= GAMEPAD_MASK_B4;
         break;
     }
+#endif
     testwork++;
 }
 //-------------------------------------------------------------------------------------------------------------------
