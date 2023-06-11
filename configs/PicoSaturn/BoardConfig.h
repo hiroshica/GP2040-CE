@@ -34,8 +34,8 @@
 #define PIN_BUTTON_R3   -1          // R3 / RS / RS / R3 / 12 / RS
 #define PIN_BUTTON_A1   -1          // A1 / Guide / Home / PS / 13 / ~
 #define PIN_BUTTON_A2   -1          // A2 / ~ / Capture / ~ / 14 / ~
-#define PIN_BUTTON_TURBO -1         // Turbo
-#define PIN_BUTTON_REVERSE -1       // UDLR Reverse
+#define PIN_BUTTON_TURBO 16         // Turbo
+#define PIN_BUTTON_REVERSE 17       // UDLR Reverse
 #define PIN_SLIDER_LS    -1         // Left Stick Slider
 #define PIN_SLIDER_RS    -1         // Right Stick Slider
 #define PIN_SLIDER_SOCD_ONE    -1         // SOCD Slider Pin One
@@ -283,6 +283,11 @@
 #define HOTKEY_F2_LEFT_ACTION  HOTKEY_SOCD_LAST_INPUT
 #define HOTKEY_F2_RIGHT_MASK   GAMEPAD_MASK_RIGHT
 #define HOTKEY_F2_RIGHT_ACTION HOTKEY_INVERT_Y_AXIS
+
+
+// web ip address 3 field number 192.168.IPADDR_3.1
+#define IPADDR_3   (168)
+
 
 // For details on this, see: https://gp2040-ce.info/#/development?id=i2c-display-splash
 #define DEFAULT_SPLASH \

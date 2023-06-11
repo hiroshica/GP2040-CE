@@ -44,11 +44,16 @@ try changing the first byte of tud_network_mac_address[] below from 0x02 to 0x00
 */
 #include "tusb.h"
 
+
 #include "dhserver.h"
 #include "dnserver.h"
 #include "lwip/init.h"
 #include "lwip/timeouts.h"
 #include "lwip/apps/httpd.h"
+
+//#include "BoardConfig.h"のは以下ではないようなのでそこに入れた一部をここに書き出しておく
+#define IPADDR_3   (168)
+
 
 #define INIT_IP4(a,b,c,d) { PP_HTONL(LWIP_MAKEU32(a,b,c,d)) }
 
@@ -63,7 +68,6 @@ static struct pbuf *received_frame;
 /* it is suggested that the first byte is 0x02 to indicate a link-local address */
 const uint8_t tud_network_mac_address[6] = {0x02, 0x02, 0x84, 0x6A, 0x96, 0x00};
 
-#define IPADDR_3   (168)
 /* network parameters of this MCU */
 static const ip4_addr_t ipaddr  = INIT_IP4(192, 168, IPADDR_3, 1);
 static const ip4_addr_t netmask = INIT_IP4(255, 255, 255, 0);

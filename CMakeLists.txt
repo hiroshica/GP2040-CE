@@ -13,7 +13,7 @@ if (PICO_SDK_VERSION_STRING VERSION_LESS "1.5.0")
 endif()
 
 # Uncomment the next line for an unomptimized build for debugging. Use in conjunction with the Debug build type.
-# set(PICO_DEOPTIMIZED_DEBUG 1)
+set(PICO_DEOPTIMIZED_DEBUG 1)
 
 project(GP2040-CE LANGUAGES C CXX ASM VERSION 0.7.2)
 set(CMAKE_C_STANDARD 11)
@@ -96,7 +96,7 @@ add_subdirectory(lib)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   # Activate some compiler / linker options to aid us with diagnosing stack space issues in Debug builds
-  add_compile_options(-g -O0 -fstack-usage -Wstack-usage=500)
+  add_compile_options(-fstack-usage -Wstack-usage=500)
   add_compile_definitions(PICO_USE_STACK_GUARDS=1)
 endif()
 

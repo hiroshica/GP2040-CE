@@ -92,7 +92,7 @@ void I2CDisplayAddon::process() {
 			drawStatusBar(gamepad);
 			drawText(0, 2, "[Web Config Mode]");
 			drawText(0, 3, std::string("GP2040-CE : ") + std::string(GP2040VERSION));
-			drawText(0, 4, "[http://192.168.7.1]");
+			drawText(0, 4, std::string("[http://192.168.") + std::to_string(IPADDR_3) + std::string(".1]"));
 			drawText(0, 5, "Preview:");
 			drawText(5, 6, "B1 > Button");
 			drawText(5, 7, "B2 > Splash");
