@@ -7,6 +7,7 @@ include(CMakePrintHelpers)
 # initialize the SDK based on PICO_SDK_PATH
 # note: this must happen before project()
 include(pico_sdk_import.cmake)
+set(USE_PICO_SDK 1)
 
 if (PICO_SDK_VERSION_STRING VERSION_LESS "1.5.0")
   message(FATAL_ERROR "Raspberry Pi Pico SDK version 1.5.0 (or later) required. Your version is ${PICO_SDK_VERSION_STRING}")
@@ -134,9 +135,11 @@ src/addons/slider_socd.cpp
 src/addons/wiiext.cpp
 src/addons/snes_input.cpp
 src/addons/saturninterface.cpp
+src/addons/spidisplay.cpp
 src/gamepad/GamepadDebouncer.cpp
 src/gamepad/GamepadDescriptors.cpp
 src/SaturnReader/SaturnController.cpp
+src/st7789/st7789.cpp
 ${PROTO_OUTPUT_DIR}/enums.pb.c
 ${PROTO_OUTPUT_DIR}/config.pb.c
 )
