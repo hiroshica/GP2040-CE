@@ -44,7 +44,7 @@ void SaturnInterfaceInput::setup()
 //-------------------------------------------------------------------------------------------------------------------
 void SaturnInterfaceInput::process()
 {
-    //if (nextTimer < getMillis())
+    // if (nextTimer < getMillis())
     {
         m_SaturnController->Update(true);
         nextTimer = getMillis() + uIntervalMS;
@@ -76,10 +76,16 @@ void SaturnInterfaceInput::process()
             }
         }
 
-        gamepad->state.lx = ((uint16_t)m_SaturnController->keyStatus[0]) << 8;
-        gamepad->state.ly = ((uint16_t)m_SaturnController->keyStatus[1]) << 8;
-        gamepad->state.lt = m_SaturnController->keyStatus[2];
-        gamepad->state.rt = m_SaturnController->keyStatus[3];
+        if (getID == SaturnController::SaturnID::SaturnIDMulCon || getID == SaturnController::SaturnID::SaturnIDAnalog)
+        {
+            gamepad->state.lx = ((uint16_t)m_SaturnController->keyStatus[0]) << 8;
+            gamepad->state.ly = ((uint16_t)m_SaturnController->keyStatus[1]) << 8;
+            gamepad->state.lt = m_SaturnController->keyStatus[2];
+            gamepad->state.rt = m_SaturnController->keyStatus[3];
+            gamepad->hasAnalogTriggers = false;
+            gamepad->hasLeftAnalogStick = true;
+            gamepad->hasAnalogTriggers = true;
+        }
 
         if (getID == SaturnController::SaturnID::SaturnIDDigitalPad || getID == SaturnController::SaturnID::SaturnIDMulCon || getID == SaturnController::SaturnID::SaturnIDMulConDigital)
         {
