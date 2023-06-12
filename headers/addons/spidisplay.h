@@ -24,6 +24,7 @@ public:
 	virtual void process();
 	virtual std::string name() { return SPIDisplayName; }
 private:
+	int32_t testcount;
 #if 0
 	int initDisplay(int typeOverride);
 	bool isSH1106(int detectedDisplay);

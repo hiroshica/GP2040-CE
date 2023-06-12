@@ -63,13 +63,16 @@ bool SPIDisplayAddon::available()
 void SPIDisplayAddon::setup()
 {
     // initialize the lcd
-    uint16_t rgbdata = 0x0000;
-    // uint16_t rgbdata = 0x001f;  // 青
+    //uint16_t rgbdata = 0x0000;
+    uint16_t rgbdata = 0x001f;  // 青
     // uint16_t rgbdata = 0x03e0;  // 緑
     // uint16_t rgbdata = 0x7a00; // 赤
     st7789_init(&lcd_config, lcd_width, lcd_height);
     st7789_fill(rgbdata);
     // initialize the lcd
+
+	int32_t testcount=0;
+
 }
 //-----------------------------------------------------------------------------------------------
 void SPIDisplayAddon::preprocess()
@@ -78,4 +81,9 @@ void SPIDisplayAddon::preprocess()
 //-----------------------------------------------------------------------------------------------
 void SPIDisplayAddon::process()
 {
+    #define TestWait (200)
+    testcount++;
+    if((testcount%TestWait) == 0){
+        int32_t index = testcount/TestWait;
+    }
 }

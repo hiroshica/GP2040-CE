@@ -11,18 +11,22 @@
 #include "gp2040aux.h"
 
 // Launch our second core with additional modules loaded in
-void core1() {
+void core1()
+{
 	multicore_lockout_victim_init(); // block core 1
 
 	// Create GP2040 w/ Additional Modules for Core 1
-	GP2040Aux * gp2040Core1 = new GP2040Aux();
+	GP2040Aux *gp2040Core1 = new GP2040Aux();
 	gp2040Core1->setup();
 	gp2040Core1->run();
 }
 
-int main() {
+int main()
+{
 	// Create GP2040 Main Core (core0), Core1 is dependent on Core0
-	GP2040 * gp2040 = new GP2040();
+
+	stdio_init_all(); // use printf
+	GP2040 *gp2040 = new GP2040();
 	gp2040->setup();
 
 	// Create GP2040 Thread for Core1
