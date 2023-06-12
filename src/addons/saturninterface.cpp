@@ -13,6 +13,9 @@
 #define SATURN_CONTROLLER_1_PIN_6 7
 #define SATURN_CONTROLLER_1_PIN_7 8
 
+#define ANALOG_CENTER 0.5f    // 0.5f is center
+#define ANALOG_DEADZONE 0.05f // move to config (future release)
+
 SaturnController *m_SaturnController;
 
 //-------------------------------------------------------------------------------------------------------------------
@@ -35,41 +38,57 @@ void SaturnInterfaceInput::setup()
                                               SATURN_CONTROLLER_1_PIN_7  // TL
     );
     m_SaturnController->pinInit();
+    uIntervalMS = 0;
+    nextTimer = getMillis() + uIntervalMS;
 }
 //-------------------------------------------------------------------------------------------------------------------
 void SaturnInterfaceInput::process()
 {
-    m_SaturnController->Update(true);
-    Gamepad *gamepad = Storage::getInstance().GetGamepad();
-    for (int iI = 0; iI < KEY_DIGITALMAX; iI++)
+    //if (nextTimer < getMillis())
     {
-        uint32_t keycheck[KEY_DIGITALMAX][3] = {
-            // readdata index, button assign bit
-            {4, SATURN_READ_KEY_A, GAMEPAD_MASK_B1},
-            {4, SATURN_READ_KEY_B, GAMEPAD_MASK_B2},
-            {4, SATURN_READ_KEY_C, GAMEPAD_MASK_L2},
-            {4, SATURN_READ_KEY_X, GAMEPAD_MASK_B3},
-            {4, SATURN_READ_KEY_Y, GAMEPAD_MASK_B4},
-            {4, SATURN_READ_KEY_Z, GAMEPAD_MASK_R2},
-            {4, SATURN_READ_KEY_L, GAMEPAD_MASK_L1},
-            {4, SATURN_READ_KEY_R, GAMEPAD_MASK_R1},
-            {5, SATURN_READ_KEY_START, GAMEPAD_MASK_A1},
-        };
-
-        uint32_t getstate = m_SaturnController->keyStatus[keycheck[iI][0]] & keycheck[iI][1];
-        if (getstate)
-        {
-            gamepad->state.buttons |= keycheck[iI][2];
-        }
+        m_SaturnController->Update(true);
+        nextTimer = getMillis() + uIntervalMS;
     }
+
     SaturnController::SaturnID getID = m_SaturnController->m_GetId;
-    if (getID == SaturnController::SaturnID::SaturnIDDigitalPad || getID == SaturnController::SaturnID::SaturnIDMulCon || getID == SaturnController::SaturnID::SaturnIDMulConDigital)
+    Gamepad *gamepad = Storage::getInstance().GetGamepad();
+    if (getID > 0)
     {
-        // ミッションスティックが勝手に作り出しているものを無視するためにIDでデジタル方向データを取得
-        gamepad->state.dpad |= (m_SaturnController->keyStatus[5] & SATURN_READ_KEY_UP) ? GAMEPAD_MASK_UP : 0;
-        gamepad->state.dpad |= (m_SaturnController->keyStatus[5] & SATURN_READ_KEY_DOWN) ? GAMEPAD_MASK_DOWN : 0;
-        gamepad->state.dpad |= (m_SaturnController->keyStatus[5] & SATURN_READ_KEY_LEFT) ? GAMEPAD_MASK_LEFT : 0;
-        gamepad->state.dpad |= (m_SaturnController->keyStatus[5] & SATURN_READ_KEY_RIGHT) ? GAMEPAD_MASK_RIGHT : 0;
+        for (int iI = 0; iI < KEY_DIGITALMAX; iI++)
+        {
+            uint32_t keycheck[KEY_DIGITALMAX][3] = {
+                // readdata index, button assign bit
+                {4, SATURN_READ_KEY_A, GAMEPAD_MASK_B1},
+                {4, SATURN_READ_KEY_B, GAMEPAD_MASK_B2},
+                {4, SATURN_READ_KEY_C, GAMEPAD_MASK_L2},
+                {4, SATURN_READ_KEY_X, GAMEPAD_MASK_B3},
+                {4, SATURN_READ_KEY_Y, GAMEPAD_MASK_B4},
+                {4, SATURN_READ_KEY_Z, GAMEPAD_MASK_R2},
+                {4, SATURN_READ_KEY_L, GAMEPAD_MASK_L1},
+                {4, SATURN_READ_KEY_R, GAMEPAD_MASK_R1},
+                {5, SATURN_READ_KEY_START, GAMEPAD_MASK_A1},
+            };
+
+            uint32_t getstate = m_SaturnController->keyStatus[keycheck[iI][0]] & keycheck[iI][1];
+            if (getstate)
+            {
+                gamepad->state.buttons |= keycheck[iI][2];
+            }
+        }
+
+        gamepad->state.lx = ((uint16_t)m_SaturnController->keyStatus[0]) << 8;
+        gamepad->state.ly = ((uint16_t)m_SaturnController->keyStatus[1]) << 8;
+        gamepad->state.lt = m_SaturnController->keyStatus[2];
+        gamepad->state.rt = m_SaturnController->keyStatus[3];
+
+        if (getID == SaturnController::SaturnID::SaturnIDDigitalPad || getID == SaturnController::SaturnID::SaturnIDMulCon || getID == SaturnController::SaturnID::SaturnIDMulConDigital)
+        {
+            // ミッションスティックが勝手に作り出しているものを無視するためにIDでデジタル方向データを取得
+            gamepad->state.dpad |= (m_SaturnController->keyStatus[5] & SATURN_READ_KEY_UP) ? GAMEPAD_MASK_UP : 0;
+            gamepad->state.dpad |= (m_SaturnController->keyStatus[5] & SATURN_READ_KEY_DOWN) ? GAMEPAD_MASK_DOWN : 0;
+            gamepad->state.dpad |= (m_SaturnController->keyStatus[5] & SATURN_READ_KEY_LEFT) ? GAMEPAD_MASK_LEFT : 0;
+            gamepad->state.dpad |= (m_SaturnController->keyStatus[5] & SATURN_READ_KEY_RIGHT) ? GAMEPAD_MASK_RIGHT : 0;
+        }
     }
 }
 //-------------------------------------------------------------------------------------------------------------------

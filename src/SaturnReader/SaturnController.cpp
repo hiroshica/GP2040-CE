@@ -311,7 +311,6 @@ SaturnController::AnalogRetcode SaturnController::saturnReadAnalog(void)
 	int32_t i;
 	uint8_t tr = 0;
 	uint8_t r;
-	uint8_t digital_mode = 0;
 	int32_t nibbles = 14;
 	uint8_t *joy_report = last_built_report[JOYSTICK_REPORT_IDX];
 
@@ -354,7 +353,6 @@ SaturnController::AnalogRetcode SaturnController::saturnReadAnalog(void)
 		{
 			if (dat[1] == 0x12)
 			{
-				digital_mode = 1;
 				nibbles = 8;
 			}
 		}
@@ -397,7 +395,7 @@ SaturnController::AnalogRetcode SaturnController::saturnReadAnalog(void)
 	if (!(dat[4] & 0x08)) // R
 		joy_report[4] |= SATURN_READ_KEY_R;
 
-	if (digital_mode)
+	if (retcode == AnalogRetcode::Digital_MulCon)
 	{
 		// switch is in the "+" position
 		if (!(dat[2] & 0x08)) // right
@@ -447,11 +445,11 @@ Error:
 	TH_HIGH();
 	delay_us(4);
 }
-
 	return retcode;
 }
 uint8_t SaturnController::ConvAnaglog(uint8_t indata)
 {
+#if 0
 	uint8_t retdata = 0;
 	if (indata <= (uint8_t)0x80)
 	{
@@ -462,6 +460,9 @@ uint8_t SaturnController::ConvAnaglog(uint8_t indata)
 		retdata = indata - 0x80;
 	}
 	return retdata;
+#else
+	return indata;
+#endif
 }
 
 void SaturnController::saturnReadPad()

@@ -17,6 +17,8 @@ public:
 	virtual void preprocess();
     virtual std::string name() { return SIName; }
 private:
+    uint32_t uIntervalMS;
+    uint32_t nextTimer;
 };
 
 #endif  // SATURNINTERFACE_H_
