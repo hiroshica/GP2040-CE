@@ -13,3 +13,6 @@ add_subdirectory(rndis)
 add_subdirectory(TinyUSB_Gamepad)
 add_subdirectory(WiiExtension)
 add_subdirectory(SNESpad)
+
+set(LOVYANGFX "PICO-SDK")
+add_subdirectory(LovyanGFX)

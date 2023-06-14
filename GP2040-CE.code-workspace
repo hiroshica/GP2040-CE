@@ -1,6 +1,9 @@
 {
 	"folders": [
 		{
+			"path": "../../pico_newwork/srcs/testlcd/"
+		},
+		{
 			"path": "."
 		}
 	],

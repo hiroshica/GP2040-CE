@@ -92,7 +92,10 @@ compile_proto()
 
 # initialize the Raspberry Pi Pico SDK
 pico_sdk_init()
+add_compile_options(-D PICO_SDK_PLATFORM)
+
 add_subdirectory(lib)
+
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   # Activate some compiler / linker options to aid us with diagnosing stack space issues in Debug builds
@@ -138,7 +141,7 @@ src/addons/spidisplay.cpp
 src/gamepad/GamepadDebouncer.cpp
 src/gamepad/GamepadDescriptors.cpp
 src/SaturnReader/SaturnController.cpp
-src/st7789/st7789.cpp
+#src/st7789/st7789.cpp
 ${PROTO_OUTPUT_DIR}/enums.pb.c
 ${PROTO_OUTPUT_DIR}/config.pb.c
 )
@@ -163,6 +166,7 @@ rndis
 hardware_adc
 WiiExtension
 SNESpad
+LovyanGFX
 pico_mbedtls
 TinyUSB_Gamepad
 nanopb
@@ -173,6 +177,7 @@ headers
 headers/addons
 headers/configs
 headers/gamepad
+lib/LovyanGFX/src
 configs/${GP2040_BOARDCONFIG}
 ${PROTO_OUTPUT_DIR}
 )
