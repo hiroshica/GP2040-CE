@@ -26,11 +26,14 @@ int main()
 	// Create GP2040 Main Core (core0), Core1 is dependent on Core0
 
 	stdio_init_all(); // use printf
+	printf("init start\n");
 	GP2040 *gp2040 = new GP2040();
 	gp2040->setup();
+	printf("core0 OK\n");
 
 	// Create GP2040 Thread for Core1
 	multicore_launch_core1(core1);
+	printf("core1 OK\n");
 
 	// Start Core0 Loop
 	gp2040->run();
