@@ -101,19 +101,6 @@ void SPIDisplayAddon::setup()
 {
     lcd.init();
 
-#if 0
-    // 背景にグラデーションを描画する
-    lcd.startWrite();
-    lcd.setAddrWindow(0, 0, lcd.width(), lcd.height());
-    for (int y = 0; y < lcd.height(); ++y)
-    {
-        for (int x = 0; x < lcd.width(); ++x)
-        {
-            lcd.writeColor(lcd.color888(x >> 1, (x + y) >> 2, y >> 1), 1);
-        }
-    }
-    lcd.endWrite();
-#endif
     lcd.startWrite();
     lcd.setAddrWindow(0, 0, lcd.width(), lcd.height());
     lcd.endWrite();
@@ -135,6 +122,68 @@ const DisplayOptions &SPIDisplayAddon::getDisplayOptions()
     bool configMode = Storage::getInstance().GetConfigMode();
     return configMode ? Storage::getInstance().getPreviewDisplayOptions() : Storage::getInstance().getDisplayOptions();
 }
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------
+#define OFFSETX (8)
+#define OFFSETY (24)
+int color_table[] = {
+    TFT_BLACK,
+    TFT_WHITE,
+};
+//-----------------------------------------------------------------------------------------------
+void SPIDisplayAddon::drawText(int x, int y, std::string text)
+{
+    lcd.startWrite();
+    lcd.setTextColor(TFT_WHITE, TFT_BLACK);
+    lcd.setTextSize(1.6f, 1.6f);
+    lcd.setCursor((x * 8 * lcd.getTextSizeX()) + OFFSETX, (y * 16 * lcd.getTextSizeX()) + OFFSETY);
+    lcd.print(text.c_str());
+    lcd.endWrite();
+}
+//-----------------------------------------------------------------------------------------------
+void SPIDisplayAddon::drawPreciseEllipse(int x, int y, int32_t iRadiusX, int32_t iRadiusY, uint8_t ucColor, uint8_t bFilled)
+{
+    lcd.startWrite();
+    lcd.setColor(color_table[ucColor]);
+
+    if (bFilled)
+    {
+        lcd.fillEllipse((x + OFFSETX), (y + OFFSETY), iRadiusX, iRadiusY);
+    }
+    else
+    {
+        lcd.drawEllipse((x + OFFSETX), (y + OFFSETY), iRadiusX, iRadiusY);
+    }
+
+    lcd.endWrite();
+}
+//-----------------------------------------------------------------------------------------------
+void SPIDisplayAddon::drawRectangle(int x1, int y1, int x2, int y2, uint8_t ucColor, uint8_t bFilled)
+{
+    int w = x2 - x1;
+    int h = y2 - y1;
+    lcd.startWrite();
+    lcd.setColor(color_table[ucColor]);
+
+    if (bFilled)
+    {
+        lcd.fillRect((x1 + OFFSETX), (y1 + OFFSETY), w, h);
+    }
+    else
+    {
+        lcd.drawRect((x1 + OFFSETX), (y1 + OFFSETY), w, h);
+    }
+
+    lcd.endWrite();
+}
+//-----------------------------------------------------------------------------------------------
+void SPIDisplayAddon::drawSprite(uint8_t *pSprite, int cx, int cy, int iPitch, int x, int y, uint8_t iPriority)
+{
+    lcd.startWrite();
+
+    lcd.endWrite();
+}
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------
 void SPIDisplayAddon::process()
 {
@@ -173,9 +222,9 @@ void SPIDisplayAddon::process()
         drawText(0, 2, "[Web Config Mode]");
         drawText(0, 3, std::string("GP2040-CE : ") + std::string(GP2040VERSION));
         drawText(0, 4, std::string("[http://192.168.") + std::to_string(IPADDR_3) + std::string(".1]"));
-        drawText(0, 5, "Preview:");
-        drawText(5, 6, "B1 > Button");
-        drawText(5, 7, "B2 > Splash");
+        // drawText(0, 5, "Preview:");
+        // drawText(5, 6, "B1 > Button");
+        // drawText(5, 7, "B2 > Splash");
         break;
     case SPIDisplayAddon::DisplayMode::SPLASH:
         /*
@@ -187,6 +236,9 @@ void SPIDisplayAddon::process()
         */
         break;
     case SPIDisplayAddon::DisplayMode::BUTTONS:
+        lcd.startWrite();
+        lcd.fillRect(0, 0, lcd.width(), (lcd.height() / 3), TFT_BLACK);
+        lcd.endWrite();
         drawStatusBar(gamepad);
         const DisplayOptions &options = getDisplayOptions();
         ButtonLayoutCustomOptions buttonLayoutCustomOptions = options.buttonLayoutCustomOptions;
@@ -335,14 +387,14 @@ SPIDisplayAddon::DisplayMode SPIDisplayAddon::getDisplayMode()
     }
     else
     {
-#if 0
-		if (Storage::getInstance().getDisplayOptions().splashMode != static_cast<SplashMode>(SPLASH_MODE_NONE)) {
-			int splashDuration = getDisplayOptions().splashDuration;
-			if (splashDuration == 0 || getMillis() < splashDuration) {
-				return SPIDisplayAddon::DisplayMode::SPLASH;
-			}
-		}
-#endif
+        if (Storage::getInstance().getDisplayOptions().splashMode != static_cast<SplashMode>(SPLASH_MODE_NONE))
+        {
+            int splashDuration = getDisplayOptions().splashDuration;
+            if (splashDuration == 0 || getMillis() < splashDuration)
+            {
+                return SPIDisplayAddon::DisplayMode::SPLASH;
+            }
+        }
     }
 
     return SPIDisplayAddon::DisplayMode::BUTTONS;
@@ -457,46 +509,6 @@ void SPIDisplayAddon::drawButtonLayoutRight(ButtonLayoutParamsRight &options)
 }
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // ここから下が実際の描画？
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#define OFFSETX (8)
-#define OFFSETY (24)
-int color_table[] = {
-    TFT_BLACK,
-    TFT_WHITE,
-};
-//-----------------------------------------------------------------------------------------------
-void SPIDisplayAddon::drawText(int x, int y, std::string text)
-{
-    lcd.startWrite();
-    lcd.setTextColor(TFT_WHITE, TFT_BLACK);
-    lcd.setTextSize(1.6f, 1.6f);
-    lcd.setCursor((x * 8 * lcd.getTextSizeX()) + OFFSETX, (y * 16 * lcd.getTextSizeX()) + OFFSETY);
-    lcd.print(text.c_str());
-    lcd.endWrite();
-}
-//-----------------------------------------------------------------------------------------------
-void SPIDisplayAddon::drawPreciseEllipse(int x, int y, int32_t iRadiusX, int32_t iRadiusY, uint8_t ucColor, uint8_t bFilled)
-{
-    lcd.startWrite();
-    lcd.setColor(color_table[ucColor]);
-
-    lcd.endWrite();
-}
-//-----------------------------------------------------------------------------------------------
-void SPIDisplayAddon::drawRectangle(int x1, int y1, int x2, int y2, uint8_t ucColor, uint8_t bFilled)
-{
-    lcd.startWrite();
-    lcd.setColor(color_table[ucColor]);
-
-    lcd.endWrite();
-}
-//-----------------------------------------------------------------------------------------------
-void SPIDisplayAddon::drawSprite(uint8_t *pSprite, int cx, int cy, int iPitch, int x, int y, uint8_t iPriority)
-{
-    lcd.startWrite();
-
-    lcd.endWrite();
-}
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------
 void SPIDisplayAddon::drawDiamond(int cx, int cy, int size, uint8_t colour, uint8_t filled)

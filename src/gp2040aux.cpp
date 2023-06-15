@@ -22,7 +22,7 @@ GP2040Aux::~GP2040Aux() {
 }
 
 void GP2040Aux::setup() {
-	addons.LoadAddon(new I2CDisplayAddon(), CORE1_LOOP);
+	//addons.LoadAddon(new I2CDisplayAddon(), CORE1_LOOP);
 	addons.LoadAddon(new SPIDisplayAddon(), CORE1_LOOP);
 	addons.LoadAddon(new NeoPicoLEDAddon(), CORE1_LOOP);
 	addons.LoadAddon(new PlayerLEDAddon(), CORE1_LOOP);
