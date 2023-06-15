@@ -24,11 +24,10 @@ public:
 	virtual void process();
 	virtual std::string name() { return SPIDisplayName; }
 private:
-	int32_t testcount;
-#if 0
-	int initDisplay(int typeOverride);
-	bool isSH1106(int detectedDisplay);
-	void clearScreen(int render); // DisplayModule
+	void clearScreen(int render);
+	bool isDisplayPowerOff();
+	void setDisplayPower(uint8_t status);
+
 	void drawStickless(int startX, int startY, int buttonRadius, int buttonPadding);
 	void drawWasdBox(int startX, int startY, int buttonRadius, int buttonPadding);
 	void drawArcadeStick(int startX, int startY, int buttonRadius, int buttonPadding);
@@ -36,6 +35,10 @@ private:
 	void drawText(int startX, int startY, std::string text);
 	void initMenu(char**);
 	//Adding my stuff here, remember to sort before PR
+	void drawPreciseEllipse(int x, int y, int32_t iRadiusX, int32_t iRadiusY, uint8_t ucColor, uint8_t bFilled);
+	void drawRectangle(int x1, int y1, int x2, int y2, uint8_t ucColor, uint8_t bFilled);
+	void drawSprite(uint8_t *pSprite, int cx, int cy, int iPitch, int x, int y, uint8_t iPriority);
+
 	void drawDiamond(int cx, int cy, int size, uint8_t colour, uint8_t filled);
 	void drawUDLR(int startX, int startY, int buttonRadius, int buttonPadding);
 	void drawMAMEA(int startX, int startY, int buttonSize, int buttonPadding);
@@ -70,20 +73,15 @@ private:
 	bool pressedLeft();
 	bool pressedRight();
 	const DisplayOptions& getDisplayOptions();
-	bool isDisplayPowerOff();
-	void setDisplayPower(uint8_t status);
-	uint32_t displaySaverTimeout = 0;
-	int32_t displaySaverTimer;
-	uint8_t displayIsPowerOn = 1;
-	uint32_t prevMillis;
-	uint8_t ucBackBuffer[1024];
-	OBDISP obd;
+
 	std::string statusBar;
 	Gamepad* gamepad;
 	Gamepad* pGamepad;
 	bool configMode;
+	uint8_t displayIsPowerOn = 1;
 
 	enum DisplayMode {
+		NONE,
 		CONFIG_INSTRUCTION,
 		BUTTONS,
 		SPLASH
@@ -91,8 +89,8 @@ private:
 
 	DisplayMode getDisplayMode();
 	DisplayMode prevDisplayMode;
+	DisplayMode clearClearDisplayMode = DisplayMode::NONE;
 	uint16_t prevButtonState;
-#endif
 };
 
 #endif
